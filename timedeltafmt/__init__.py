@@ -16,7 +16,9 @@ MONTH = YEAR // 12  # still no truncation error
 
 class TimedeltaFormatter:
     """
-    TimedeltaFormatter `parse` timespan string to timedelta and `format` timedelta to string
+    TimedeltaFormatter `parse` timespan `str` to `timedelta` and `format` `timedelta` to `str`
+
+    For advanced usage, `parse_int` results in and `format_int` accepts `int` instead of `timedelta`.
     """
 
     def __init__(self, durations: Mapping[str, Union[int, float]], format_units: Iterable[str]):
@@ -67,6 +69,12 @@ class TimedeltaFormatter:
 
         :param string: the string represent time duration
         """
+        return timedelta(microseconds=self.parse_int(string))
+
+    def parse_int(self, string: str) -> int:
+        """
+        Parse a timespan string into int
+        """
         string = string.strip()
         durations = self._parse_durations
 
@@ -100,7 +108,7 @@ class TimedeltaFormatter:
             frac, dt = modf(carry)
             us += int(dt)
 
-        return timedelta(microseconds=us)
+        return us
 
     def format(self, delta: timedelta, resolution: int = 1, zero: str = '0') -> str:
         """
@@ -112,13 +120,17 @@ class TimedeltaFormatter:
         :param zero: str to return when timedelta is 0
         :param resolution: the smallest unit duration used to format the timedelta
         """
+        return self.format_int(delta.days * DAY + delta.seconds * SECOND + delta.microseconds, resolution, zero)
+
+    def format_int(self, us: int, resolution: int = 1, zero: str = '0') -> str:
+        """
+        Format a timespan in int to string
+        """
         units = self._format_units
         if not units:
             raise RuntimeError("No format units available")
 
         ten2fifteen = 10 ** 15  # 15 digit accuracy? related to sys.float_info.dig?
-
-        us: int = delta.days * DAY + delta.seconds * SECOND + delta.microseconds
         frac: int = 0
         sign = 1 if us >= 0 else -1
         us *= sign
