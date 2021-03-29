@@ -102,7 +102,7 @@ class TimedeltaFormatter:
 
         return timedelta(microseconds=us)
 
-    def format(self, delta: timedelta, zero: str = '0', *, resolution=MILLISECOND):
+    def format(self, delta: timedelta, resolution: int = 1, zero: str = '0') -> str:
         """
         Format a timedelta into str
 
@@ -215,8 +215,8 @@ def parse_timedelta(string) -> timedelta:
     return _FORMATTER.parse(string)
 
 
-def format_timedelta(delta: timedelta, zero: str = '0', *, resolution: int = SECOND) -> str:
-    return _FORMATTER.format(delta, zero, resolution=resolution)
+def format_timedelta(delta: timedelta, resolution: int = MILLISECOND, zero: str = '0') -> str:
+    return _FORMATTER.format(delta, resolution, zero)
 
 
 parse = parse_timedelta

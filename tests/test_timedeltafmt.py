@@ -56,7 +56,7 @@ def test_format():
     assert easy_format(seconds=1) == '1s'
     assert easy_format(seconds=86400) == '1d'
     assert easy_format(seconds=86399) == '23h 59m 59s'
-    assert easy_format(seconds=1.1) == '1s'
+    assert easy_format(seconds=1.1) == '1s 100ms'
     assert easy_format(weeks=1) == '7d'
     assert easy_format(days=365.25 + 10) == '1y 10d'
     assert easy_format(days=365.25 + 10) == '1y 10d'
